@@ -1,4 +1,4 @@
-import { Refine } from "@refinedev/core";
+import { AuthBindings, Refine } from "@refinedev/core";
 import {
     ThemedLayoutV2,
     notificationProvider,
@@ -16,15 +16,23 @@ import { AntdInferencer } from "@refinedev/inferencer/antd";
 import { ConfigProvider } from "antd";
 import "@refinedev/antd/dist/reset.css";
 
+
+import { BlogPostList } from "pages/blog-posts/list";
+import { BlogPostEdit } from "pages/blog-posts/edit";
+import { BlogPostShow } from "pages/blog-posts/show";
+import { BlogPostCreate } from "pages/blog-posts/create";
+
+//import authProvider from "./authProvider";
+
+
+
 const App: React.FC = () => {
     return (
         <BrowserRouter>
-            <ConfigProvider theme={RefineThemes.Magenta}>
+            <ConfigProvider theme={RefineThemes.Green}>
                 <Refine
-                    routerProvider={routerBindings}
-                    dataProvider={dataProvider(
-                        "https://api.fake-rest.refine.dev",
-                    )}
+                    routerProvider={routerBindings}                   
+                    dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
                     notificationProvider={notificationProvider}
                     resources={[
                         {
@@ -33,12 +41,16 @@ const App: React.FC = () => {
                             show: "/blog-posts/show/:id",
                             create: "/blog-posts/create",
                             edit: "/blog-posts/edit/:id",
+                            meta: {
+                              canDelete: true,
+                            }
                         },
                     ]}
                     options={{
                         syncWithLocation: true,
                         warnWhenUnsavedChanges: true,
                     }}
+                    //authProvider={authProvider}
                 >
                     <Routes>
                         <Route
@@ -55,18 +67,18 @@ const App: React.FC = () => {
                                 }
                             />
                             <Route path="blog-posts">
-                                <Route index element={<AntdInferencer />} />
+                                <Route index element={<BlogPostList />} />
                                 <Route
                                     path="show/:id"
-                                    element={<AntdInferencer />}
+                                    element={<BlogPostShow />}
                                 />
                                 <Route
                                     path="edit/:id"
-                                    element={<AntdInferencer />}
+                                    element={<BlogPostEdit />}
                                 />
                                 <Route
                                     path="create"
-                                    element={<AntdInferencer />}
+                                    element={<BlogPostCreate />}
                                 />
                             </Route>
                             <Route path="*" element={<ErrorComponent />} />
